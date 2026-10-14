@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBB血脑屏障渗透预测工具</title>
+    <style>
+        /* 全局样式重置与基础配置 */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+
+        body { 
+            /* 增强背景：渐变+低透明度分子结构背景（base64无需额外文件） */
+            background: linear-gradient(180deg, #f0f7ff 0%, #e6f3ff 100%);
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%233498db' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+            min-height: 100vh;
+            padding: 20px 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* 顶部标题区域（增强装饰） */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #3498db;
+            /* 新增：标题区域背景装饰 */
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(52, 152, 219, 0.1);
+            position: relative;
+        }
+
+        .header::before, .header::after {
+            content: "🔬";
+            position: absolute;
+            top: 20px;
+            font-size: 24px;
+            color: #3498db;
+            opacity: 0.6;
+        }
+
+        .header::before {
+            left: 20px;
+        }
+
+        .header::after {
+            right: 20px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 10px;
+            /* 新增：文字轻微阴影，提升立体感 */
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+
+        /* 卡片样式（核心模块容器，大幅增强装饰） */
+        .card { 
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            /* 新增：1. 渐变边框 */
+            border: 1px solid transparent;
+            background-clip: padding-box, border-box;
+            background-origin: padding-box, border-box;
+            background-image: 
+                linear-gradient(to bottom, #ffffff, #ffffff),
+                linear-gradient(90deg, #3498db, #81c7ec);
+            /* 新增：2. 顶部装饰条 */
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2980b9, #81c7ec);
+        }
+
+        .card:hover {
+            box-shadow: 0 6px 18px rgba(52, 152, 219, 0.2);
+            transform: translateY(-3px); /* 新增：hover轻微上浮，更灵动 */
+        }
+
+        .card h3 { 
+            color: #3498db; 
+            margin-bottom: 20px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            /* 新增：文字阴影 */
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+        }
+
+        .card h3::before {
+            content: "🔬";
+            margin-right: 10px;
+            font-size: 22px;
+        }
+
+        /* 输入控件样式（增强装饰） */
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .input-wrapper::before {
+            content: "📝";
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: #3498db;
+            opacity: 0.7;
+        }
+
+        textarea { 
+            width: 100%; 
+            padding: 15px 15px 15px 45px; /* 左侧留空放图标 */
+            border: 1px solid #dce7f5;
+            border-radius: 8px; 
+            margin-bottom: 0; /* 移到input-wrapper控制 */
+            height: 140px; 
+            resize: none;
+            font-size: 14px;
+            color: #2c3e50;
+            background: #f9fcff;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1), 0 2px 8px rgba(52, 152, 219, 0.15);
+        }
+
+        /* 文件输入装饰 */
+        .file-wrapper {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .file-wrapper::before {
+            content: "📂";
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: #3498db;
+            opacity: 0.7;
+            z-index: 1;
+        }
+
+        input[type="file"] {
+            padding: 10px 10px 10px 45px; /* 左侧留空放图标 */
+            border: 1px solid #dce7f5;
+            border-radius: 8px;
+            width: 100%;
+            margin-bottom: 0;
+            background: #f9fcff;
+            color: #7f8c8d;
+            font-size: 14px;
+            position: relative;
+            z-index: 0;
+        }
+
+        /* 文本输入装饰 */
+        .text-input-wrapper {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .text-input-wrapper::before {
+            content: "🔤";
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            color: #3498db;
+            opacity: 0.7;
+        }
+
+        input[type="text"] {
+            padding: 12px 15px 12px 45px; /* 左侧留空放图标 */
+            border: 1px solid #dce7f5;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 14px;
+            color: #2c3e50;
+            background: #f9fcff;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1), 0 2px 8px rgba(52, 152, 219, 0.15);
+        }
+
+        /* 按钮样式（增强装饰） */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        button { 
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            color: white; 
+            border: none; 
+            padding: 12px 24px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            flex: 1;
+            /* 新增：按钮阴影和内发光，提升精致感 */
+            box-shadow: 0 2px 6px rgba(52, 152, 219, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        button:hover { 
+            background: linear-gradient(90deg, #2980b9, #1f618d);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+        }
+
+        button:hover::after {
+            left: 100%; /* 新增：hover时流光效果 */
+        }
+
+        button.secondary {
+            background: linear-gradient(90deg, #ecf0f1, #bdc3c7);
+            color: #2c3e50;
+            box-shadow: 0 2px 6px rgba(189, 195, 199, 0.2);
+        }
+
+        button.secondary:hover {
+            background: linear-gradient(90deg, #bdc3c7, #95a5a6);
+            color: #2c3e50;
+            box-shadow: 0 4px 10px rgba(189, 195, 199, 0.3);
+        }
+
+        /* 结果区域样式（增强装饰） */
+        .result-area { 
+            margin-top: 20px; 
+            padding: 20px; 
+            border: 1px solid #dce7f5;
+            border-radius: 8px; 
+            min-height: 80px;
+            background: rgba(249, 252, 255, 0.8);
+            color: #2c3e50;
+            font-size: 14px;
+            /* 新增：轻微阴影，提升层次感 */
+            box-shadow: inset 0 1px 3px rgba(52, 152, 219, 0.05);
+        }
+
+        /* 表格样式（增强装饰） */
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            /* 新增：表格背景轻微透明 */
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        th, td { 
+            border: 1px solid #dce7f5; 
+            padding: 12px; 
+            text-align: left; 
+            font-size: 13px;
+        }
+
+        th { 
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            color: white;
+            font-weight: 500;
+            /* 新增：表头文字阴影 */
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        tr:nth-child(even) {
+            background: #f0f7ff;
+        }
+
+        tr:hover {
+            background: #e6f3ff;
+            transition: background 0.2s ease;
+            /* 新增：hover轻微阴影 */
+            box-shadow: 0 1px 3px rgba(52, 152, 219, 0.1);
+        }
+
+        /* 提示文本样式 */
+        .error { 
+            color: #e74c3c; 
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .error::before {
+            content: "❌";
+        }
+
+        .success { 
+            color: #27ae60; 
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .success::before {
+            content: "✅";
+        }
+
+        /* 下载链接样式（增强装饰） */
+        a {
+            display: inline-block;
+            margin-top: 10px;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border: 1px solid #3498db;
+            border-radius: 6px;
+            background: rgba(52, 152, 219, 0.05);
+        }
+
+        a:hover {
+            color: white;
+            background: #3498db;
+            text-decoration: none;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
+        }
+
+        /* 加载状态样式 */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: #3498db;
+        }
+
+        .loading::after {
+            content: "";
+            width: 16px;
+            height: 16px;
+            border: 2px solid #3498db;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* 页脚样式（增强装饰） */
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            color: #7f8c8d;
+            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid #dce7f5;
+            /* 新增：页脚背景装饰 */
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(52, 152, 219, 0.1);
+        }
+
+        /* 新增：相关资源卡片（装饰+实用，呼应Pubmed需求） */
+        .resources-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid transparent;
+            background-clip: padding-box, border-box;
+            background-origin: padding-box, border-box;
+            background-image: 
+                linear-gradient(to bottom, #ffffff, #ffffff),
+                linear-gradient(90deg, #3498db, #81c7ec);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resources-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2980b9, #81c7ec);
+        }
+
+        .resources-card h3 {
+            color: #3498db;
+            margin-bottom: 20px;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .resources-card h3::before {
+            content: " ";
+            margin-right: 10px;
+            font-size: 22px;
+        }
+
+        .resource-links {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .resource-links a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            border: 1px solid #dce7f5;
+            border-radius: 8px;
+            background: #f9fcff;
+            color: #2c3e50;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .resource-links a::before {
+            content: "🔗";
+            font-size: 16px;
+            color: #3498db;
+        }
+
+        .resource-links a:hover {
+            background: #e6f3ff;
+            border-color: #3498db;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.15);
+            color: #3498db;
+        }
+
+        /* 响应式适配（手机端友好） */
+        @media (max-width: 768px) {
+            .card, .resources-card {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .header::before, .header::after {
+                display: none; /* 手机端隐藏左右图标，节省空间 */
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .resource-links {
+                grid-template-columns: 1fr; /* 手机端单列显示资源链接 */
+            }
+
+            .input-wrapper::before, .file-wrapper::before, .text-input-wrapper::before {
+                font-size: 14px; /* 手机端图标缩小 */
+            }
+
+            textarea, input[type="file"], input[type="text"] {
+                padding-left: 35px; /* 手机端左侧留空减少 */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部标题 -->
+        <div class="header">
+            <h1>BBB血脑屏障渗透预测工具</h1>
+            <p>支持单个/批量Smiles分子预测，结果可导出CSV</p>
+        </div>
+
+        <!-- 文本预测模块 -->
+        <div class="card">
+            <h3>1. 输入Smiles（每行一个）</h3>
+            <div class="input-wrapper">
+                <textarea id="smilesInput" placeholder="请输入有效Smiles字符串，示例如下：
+C1=CC=CC=C1（苯）
+BrC(Br)Br（三溴甲烷）
+C#CC(O)CC（3-戊炔-2-醇）"></textarea>
+            </div>
+            <div class="btn-group">
+                <button onclick="predictText()"> 开始预测</button>
+                <button class="secondary" onclick="clearInput()">🗑 清空输入</button>
+            </div>
+            <div id="textResult" class="result-area">请输入有效Smiles字符串，点击「开始预测」获取结果</div>
+        </div>
+
+        <!-- CSV批量预测模块 -->
+        <div class="card">
+            <h3>2. 批量上传CSV文件</h3>
+            <div class="file-wrapper">
+                <input type="file" id="csvFile" accept=".csv">
+            </div>
+            <div class="text-input-wrapper" style="margin: 15px 0;">
+                <label style="display: block; margin-bottom: 8px; color: #2c3e50; font-weight: 500;">Smiles列名：</label>
+                <input type="text" id="smilesCol" value="Smiles_unify" placeholder="默认：Smiles_unify">
+            </div>
+            <button onclick="predictCSV()"> 上传并批量预测</button>
+            <div id="csvResult" class="result-area">请选择CSV文件，填写正确的Smiles列名后上传</div>
+        </div>
+
+        <!-- 新增：相关学术资源卡片（装饰+实用） -->
+        <div class="resources-card">
+            <h3>3. 相关学术资源（助力研究）</h3>
+            <div class="resource-links">
+                <a href="https://pubmed.ncbi.nlm.nih.gov/" target="_blank">Pubmed 生物医学文献库</a>
+                <a href="https://www.chemspider.com/" target="_blank">ChemSpider 分子查询工具</a>
+                <a href="https://go.drugbank.com/" target="_blank">DrugBank 药物数据库</a>
+                <a href="https://www.fda.gov/drugs" target="_blank">FDA 药物批准数据库</a>
+                <a href="https://rdkit.org/" target="_blank">RDKit 分子计算工具包</a>
+                <a href="https://xgboost.ai/" target="_blank">XGBoost 模型官方文档</a>
+            </div>
+        </div>
+
+        <!-- 页脚 -->
+        <div class="footer">
+            <p>© 2025 BBB血脑屏障预测工具 | 对接后端：XGBoost模型 | 基于优化1/2方案构建</p>
+        </div>
+    </div>
+
+    <script>
+        // 后端接口地址
+        const BACKEND_URL = "http://localhost:8000";
+
+        // 文本预测核心函数
+        async function predictText() {
+            const input = document.getElementById("smilesInput");
+            const resultArea = document.getElementById("textResult");
+            // 拆分Smiles列表（去空行、去空格）
+            const smilesList = input.value.split("\n")
+                .map(s => s.trim())
+                .filter(s => s !== "");
+
+            // 空输入校验
+            if (smilesList.length === 0) {
+                resultArea.innerHTML = "<span class='error'>请输入至少一个有效Smiles！</span>";
+                return;
+            }
+
+            // 显示加载状态
+            resultArea.innerHTML = "<div class='loading'>正在预测，请稍候...</div>";
+
+            try {
+                // 发送JSON请求（对接后端原有接口）
+                const response = await fetch(`${BACKEND_URL}/predict`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ smiles_list: smilesList })
+                });
+
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || "预测请求失败");
+
+                // 渲染结果表格
+                let html = `<h4 class='success'>预测完成（有效样本：${data.valid_count}）</h4>`;
+                html += `<table>
+                    <tr><th>Smiles字符串</th><th>预测结果</th><th>预测概率</th></tr>`;
+                data.predictions.forEach(item => {
+                    html += `<tr>
+                        <td>${item.smiles}</td>
+                        <td>${item.predict_result}</td>
+                        <td>${item.predict_probability || `<span class='error'>${item.error}</span>`}</td>
+                    </tr>`;
+                });
+                html += `</table>`;
+                resultArea.innerHTML = html;
+
+            } catch (e) {
+                resultArea.innerHTML = `<span class='error'>预测失败：${e.message}</span>`;
+            }
+        }
+
+        // 清空输入
+        function clearInput() {
+            document.getElementById("smilesInput").value = "";
+            document.getElementById("textResult").innerHTML = "请输入有效Smiles字符串，点击「开始预测」获取结果";
+        }
+
+        // CSV批量预测函数
+        async function predictCSV() {
+            const fileInput = document.getElementById("csvFile");
+            const smilesCol = document.getElementById("smilesCol").value;
+            const resultArea = document.getElementById("csvResult");
+
+            if (!fileInput.files.length) {
+                resultArea.innerHTML = "<span class='error'>请先选择一个CSV文件！</span>";
+                return;
+            }
+
+            // 显示加载状态
+            resultArea.innerHTML = "<div class='loading'>正在处理CSV并预测，请稍候...</div>";
+
+            try {
+                const formData = new FormData();
+                formData.append("file", fileInput.files[0]);
+                formData.append("smiles_col", smilesCol);
+
+                const response = await fetch(`${BACKEND_URL}/predict/csv`, {
+                    method: "POST",
+                    body: formData
+                });
+
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || "批量预测请求失败");
+
+                // 生成下载链接
+                const blob = new Blob([data.result_csv], { type: "text/csv;charset=utf-8;" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `BBB预测结果_${new Date().getTime()}.csv`;
+                a.innerText = " 下载批量预测结果CSV";
+
+                // 渲染结果
+                resultArea.innerHTML = `
+                    <h4 class='success'>批量预测完成</h4>
+                    <p>总样本数：${data.total_samples}</p>
+                    <p> 有效样本数：${data.valid_samples}</p>
+                    <p>无效样本数：${data.invalid_samples}</p>
+                    <br>${a.outerHTML}
+                `;
+
+            } catch (e) {
+                resultArea.innerHTML = `<span class='error'>批量预测失败：${e.message}</span>`;
+            }
+        }
+    </script>
+</body>
+</html>

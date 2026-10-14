@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+node_modules/
+.ipynb_checkpoints/
+
+# 压缩包
+*.zip
+*.rar
+*.7z
+
+# 音视频
+*.mp4
+*.avi
+*.mov
+*.wav
+*.mp3
+
+# Office 文档（论文/申报书等含个人信息，不入库）
+*.docx
+*.doc
+*.pdf
+*.pptx
+*.xlsx
+*.xls
+
+# 数据与图片
+*.csv
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.fasta
+*.pdb
+
+# 系统与二进制
+*.dll
+*.exe
+*.lnk
+.DS_Store
+Thumbs.db
