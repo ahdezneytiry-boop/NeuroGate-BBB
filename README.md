@@ -1,5 +1,10 @@
 # NeuroGate-BBB · 血脑屏障渗透预测平台
 
+![License](https://img.shields.io/github/license/ahdezneytiry-boop/NeuroGate-BBB)
+![Top Language](https://img.shields.io/github/languages/top/ahdezneytiry-boop/NeuroGate-BBB)
+![Last Commit](https://img.shields.io/github/last-commit/ahdezneytiry-boop/NeuroGate-BBB)
+![Repo Size](https://img.shields.io/github/repo-size/ahdezneytiry-boop/NeuroGate-BBB)
+
 基于 **GNN + XGBoost** 的血脑屏障（Blood-Brain Barrier, BBB）渗透性预测项目，附 FastAPI 推理服务与网页界面。
 
 血脑屏障是药物能否进入中枢神经系统的"守门员"。本项目对 8301 个分子样本进行特征工程（理化性质 + Morgan 指纹 + PCA 降维），构建图神经网络与 XGBoost 集成模型，并封装为可上传 SMILES 的网页预测服务。
