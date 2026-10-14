@@ -12,7 +12,7 @@ except ImportError as e:
     sys.exit(1)
 
 # -------------------------- 核心配置 --------------------------
-MODEL_SAVE_PATH = r"E:\BBB_Deploy\xgboost_core_only.bin"  # 模型保存路径
+MODEL_SAVE_PATH = "data/xgboost_core_only.bin"  # 模型保存路径
 # 核心特征列名（与后端特征提取顺序严格一致）
 core_cols = [
     "mol_wt", "logp", "solubility", "h_donor", "h_acceptor",

@@ -8,11 +8,11 @@ import os
 
 # -------------------------- 配置路径（需修改为你的特征工程数据路径） --------------------------
 # 特征工程生成的数据集路径（之前运行feature_engineering.py生成的）
-DATA_PATH = r"E:\jqxx\机器学习大作业\bbb_feature_engineering_result.csv"
+DATA_PATH = "data/bbb_feature_engineering_result.csv"
 # 生成的模型保存路径（直接保存到BBB_Deploy目录）
-MODEL_SAVE_PATH = r"E:\BBB_Deploy\xgboost_core_only.bin"
+MODEL_SAVE_PATH = "data/xgboost_core_only.bin"
 # 核心特征列名文件路径（之前生成的）
-FEATURE_COLS_PATH = r"E:\jqxx\机器学习大作业\core_feature_cols.txt"
+FEATURE_COLS_PATH = "data/core_feature_cols.txt"
 # ------------------------------------------------------------------------------
 
 # 1. 加载数据

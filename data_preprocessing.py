@@ -9,7 +9,7 @@ from sklearn.preprocessing import StandardScaler
 import joblib  # 新增：用于保存scaler
 
 # -------------------------- 全局路径配置（需根据实际修改） --------------------------
-RAW_DATA_PATH = r"E:\jqxx\机器学习大作业\bbb_cls_final_data.csv"  # 原始数据路径
+RAW_DATA_PATH = "data/bbb_cls_final_data.csv"  # 原始数据路径
 SAVE_DIR = r"E:\jqxx\机器学习大作业"  # 结果保存目录
 os.makedirs(SAVE_DIR, exist_ok=True)  # 确保目录存在
 
